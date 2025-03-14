@@ -1,0 +1,4 @@
+Package           Version
+----------------- -------
+pip               25.0.1
+psycopg           3.2.6
