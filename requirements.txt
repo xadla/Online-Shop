@@ -1,4 +1,6 @@
-Package           Version
------------------ -------
-pip               25.0.1
-psycopg           3.2.6
+Package            Version
+------------------ ---------
+
+idna               3.10
+psycopg            3.2.6
+boto3              1.37.13
