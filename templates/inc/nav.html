@@ -1,0 +1,30 @@
+<nav id="navbar">
+    <div id="icon">
+        <a href="/">
+            <i class="fa fa-shopping-bag"></i>
+            Online shop
+        </a>
+    </div>
+
+    <div id="links_search">
+        <div id="categorical">
+            <a href="#">Men</a>
+            <a href="#">Women</a>
+            <a href="#">Kids</a>
+            <a href="#">Beauty</a>
+        </div>
+        <div id="search">
+            <form action="get" id="search_form">
+                <input type="text" placeholder="Enter Something...">
+                <button type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="sign">
+        <a href="{% url 'accounts:signup' %}">Signup</a>
+        <a href="{% url 'accounts:signin' %}">Signin</a>
+    </div>
+</nav>
