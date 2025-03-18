@@ -6,12 +6,16 @@ from .fetch import fetch
 from .models import Product
 
 
-class ProductsView(View):
+class CategoryView(View):
+    template_name = "products/category.html"
 
-    template_name = "products/products.html"
+    def get(self, request, category):
+        products = Product.objects.filter(category=category)
+        urls = fetch([product.img_path for product in products])
 
-    def get(self, request):
-        products = Product.objects.values("img_path")
-        paths = [item['img_path'] for item in products]
-        urls = fetch(paths)
-        return render(request, self.template_name, {"urls": urls})
+        products_with_urls = [
+            {"product": product, "url": url}
+            for product, url in zip(products, urls)
+        ]
+
+        return render(request, self.template_name, {"products_with_urls": products_with_urls})

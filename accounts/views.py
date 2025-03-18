@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
 
-
+from cart.models import Cart
 from .forms import SignupForm, SigninForm
 from .models import User
 
@@ -79,7 +79,9 @@ class SigninView(View):
             user = authenticate(email=email, password=password)
 
             if user is not None:
-
+                # create a cart for user
+                cart, created = Cart.objects.get_or_create(user=user)
+                # login a user
                 login(request, user)
                 return redirect("pages:home")
 

@@ -8,10 +8,10 @@
 
     <div id="links_search">
         <div id="categorical">
-            <a href="#">Men</a>
-            <a href="#">Women</a>
-            <a href="#">Kids</a>
-            <a href="#">Beauty</a>
+            <a href="{% url 'products:category' 'men' %}">Men</a>
+            <a href="{% url 'products:category' 'women' %}">Women</a>
+            <a href="{% url 'products:category' 'kids' %}">Kids</a>
+            <a href="{% url 'products:category' 'beauty' %}">Beauty</a>
         </div>
         <div id="search">
             <form action="get" id="search_form">
