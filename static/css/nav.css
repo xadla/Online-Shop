@@ -73,6 +73,7 @@
     box-shadow: 5px 5px 20px rgba(255, 255, 255, 0.2);
     background-color: #FFF5E4;
     color: #BE5985;
+    border: 1px solid #000;
 }
 
 #search form button{
