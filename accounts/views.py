@@ -14,6 +14,7 @@ from cart.models import Cart
 from .forms import SignupForm, SigninForm
 from .models import User
 from .serializers import UserSerializer
+from utils import fetch
 
 
 class SignupView(View):
@@ -22,7 +23,8 @@ class SignupView(View):
     form = SignupForm
 
     def render(self, request, form):
-        return render(request, self.template_name, {"form": form})
+        url = fetch(["accounts/6310507.jpg"])
+        return render(request, self.template_name, {"form": form, "url": url[0]})
 
     def get(self, request):
         form = self.form()
@@ -86,7 +88,8 @@ class SigninView(View):
     form = SigninForm
 
     def render(self, request, form):
-        return render(request, self.template_name, {"form": form})
+        url = fetch(["accounts/3094352.jpg"])
+        return render(request, self.template_name, {"form": form, "url": url[0]})
 
     def get(self, request):
         form = self.form()
@@ -104,6 +107,7 @@ class SigninView(View):
             if user is not None:
 
                 login(request, user)
+                messages.success(request, "You are logedin successfully")
                 return redirect("pages:home")
 
             else:
@@ -116,7 +120,7 @@ class SigninView(View):
     def dispatch(self, request, *args, **kwargs):
         
         if request.user.is_authenticated:
-            messages.warning(request, "You must be logged out to access this page.")
+            messages.error(request, "You must be logged out to access this page.")
             return redirect('pages:home')
         
         return super().dispatch(request, *args, **kwargs)
@@ -129,6 +133,7 @@ class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
 
         logout(request)
+        messages.success(request, "You are logedout successfully")
         return redirect("pages:home")
 
 

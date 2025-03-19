@@ -1,0 +1,32 @@
+.messages{
+    position: absolute;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    top: 0;
+    left: 0;
+}
+
+.message{
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    text-align: center;
+    padding: 10px;
+    margin: 10px 5px;
+    font-size: 2rem;
+}
+
+.error{
+    background-color: #7D0A0A;
+    color: #EAD196;
+}
+
+.success{
+    background-color: #007074;
+    color: #FFC1B4;
+}

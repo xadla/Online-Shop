@@ -1,12 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
 
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/sign.css' %}">
+<link rel="stylesheet" href="{% static 'css/signin.css' %}">
+{% endblock style %}
 
 {% block content %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        <div id="img">
+            <img src="{{ url }}" alt="">
+        </div>
+
+        <div id="fields">
+            <h2>Signin Form</h2>
+            {{ form.email }}
+            {{ form.password }}
+            <button type="submit">Signin</button>
+        </div>
+        
+    </form>
+</div>
 
 {% endblock content %}
