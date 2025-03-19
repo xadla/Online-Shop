@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # rest framework
+    "rest_framework",
+
     # My apps.
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
