@@ -42,7 +42,6 @@ class ProductView(View):
     def get(self, request, id):
 
         product = get_object_or_404(Product, pk=id)
-        print(id)
         url = fetch([product.img_path])
         return render(request, self.template_name, {"product": product, "url": url[0]})
 

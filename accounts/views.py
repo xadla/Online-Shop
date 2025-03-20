@@ -10,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from cart.models import Cart
+from cart.models import Cart, CartItem
+from products.models import Product
 from .forms import SignupForm, SigninForm
 from .models import User
 from .serializers import UserSerializer
@@ -21,6 +22,25 @@ class SignupView(View):
 
     template_name = "accounts/signup.html"
     form = SignupForm
+
+    def sync_session_cart(self, request, cart):
+        session = request.session
+
+        if "cart" not in session:
+            return False
+
+        my_cart = session["cart"]
+
+        for product in my_cart:
+            prod = Product.objects.get(pk=product["product"])
+            quantity = product["quantity"]
+            CartItem.objects.create(cart=cart, product=prod, quantity=quantity)
+
+        # pop is safer than del
+        request.session.pop("cart", None)
+
+        return True
+
 
     def render(self, request, form):
         url = fetch(["accounts/6310507.jpg"])
@@ -59,8 +79,8 @@ class SignupView(View):
                     last_name=form.cleaned_data["last_name"]
                 )
 
-                # create a cart for user
                 cart, created = Cart.objects.get_or_create(user=user)
+                self.sync_session_cart(request, cart)
 
                 messages.success(request, "You are successfully registered")
 
