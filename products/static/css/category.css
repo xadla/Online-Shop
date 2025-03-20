@@ -1,0 +1,56 @@
+#container{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+#container a{
+    width: 300px;
+}
+
+h3{
+    color: #0C0950;
+    width: 100%;
+    padding: 20px 0;
+    font-size: 3rem;
+    text-align: center;
+}
+
+.product{
+    color: #3E3F5B;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 10px;
+    border-radius: 10px;
+}
+  
+a:hover .product {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f8f8f8;
+}
+  
+.product h4{
+    font-size: 1.7rem;
+    text-align: center;
+    padding: 10px 0;
+}
+  
+.product p{
+    text-align: center;
+    font-size: 1.2rem;
+}
+  
+#stars{
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+h2{
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    color: #0C0950;
+    padding: 20px 0;
+}

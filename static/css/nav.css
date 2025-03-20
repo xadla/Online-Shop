@@ -115,3 +115,26 @@
 #sign a:hover{
     background-color: #BE5985;
 }
+
+#cart a i{
+    font-size: 2rem;
+    padding: 5px 10px;
+    color: #FBE4D6;
+}
+
+#cart_icon{
+    position: relative;
+}
+
+#cart_icon p{
+    position: absolute;
+    padding: 2px;
+    border-radius: 100%;
+    background-color: #336D82;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    color: #F5ECE0;
+    right: 0;
+    bottom: -10px;
+}

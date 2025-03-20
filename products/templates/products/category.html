@@ -1,14 +1,40 @@
 {% extends "base.html" %}
+{% load static %}
 
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/category.css' %}">
+{% endblock style %}
 
 {% block content %}
 
-{% for item in products_with_urls %}
-    <div>
-        <h2>{{ item.product.name }}</h2>
-        <p>{{ item.product.description }}</p>
-        <img src="{{ item.url }}" alt="{{ item.product.name }}">
+{% if products_with_urls %}
+
+    {% for item in products_with_urls %}
+
+    <h3>All Products in {{ item.product.category }}</h3>
+    <div id="container">
+        <a href="{% url 'products:product' item.product.id %}">
+            <div class="product">
+                <img src="{{ item.url }}" alt="">
+                <h4>{{ item.product.name }}</h4>
+                <p>{{ item.product.price }}$</p>
+                <p id="stars">
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                    <i class="fa fa-star-half-o"></i>
+                    <i class="fa fa-star-o"></i>
+                    <i class="fa fa-star-o"></i>
+                </p>
+            </div>
+        </a>
     </div>
-{% endfor %}
+
+    {% endfor %}
+
+{% else %}
+
+<h2>There is no product here!</h2>
+
+{% endif %}
 
 {% endblock content %}
