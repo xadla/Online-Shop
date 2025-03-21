@@ -3,6 +3,9 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashWidget, ReadOnlyPasswo
 from django.core.exceptions import ValidationError
 
 
+import re
+
+
 from .models import User
 
 
@@ -43,67 +46,53 @@ class UserChangeForm(forms.ModelForm):
         fields = ["email", "first_name", "last_name", "password", "is_admin", "is_active", "phone_number", "address"]
 
 
-class SignupForm(forms.Form):
-
-    first_name = forms.CharField(
-        max_length=200,
-        required=False,
-        widget=forms.TextInput(
-            attrs={"placeholder": "Enter your first name"},
-        ),
-    )
-
-    last_name = forms.CharField(
-        max_length=200,
-        required=False,
-        widget=forms.TextInput(
-            attrs={"placeholder": "Enter your last name"},
-        ),
-    )
-
-    email = forms.EmailField(
-        max_length=200,
-        required=False,
-        widget=forms.EmailInput(
-            attrs={"placeholder": "Enter your email"},
-        ),
-    )
-
-    password1 = forms.CharField(
-        max_length=200,
-        required=False,
-        widget=forms.PasswordInput(
-            attrs={"placeholder": "Enter your password"}
-        ),
-    )
+class SignupForm(forms.ModelForm):
 
     password2 = forms.CharField(
         max_length=200,
         required=False,
         widget=forms.PasswordInput(
-            attrs={"placeholder": "Confirm your password"}
+            attrs={"placeholder": "Confirm your password..."}
         ),
     )
 
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email", "password", "password2")
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "Please Enter your Firstname..."}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Please Enter your Lastname..."}),
+            "email": forms.EmailInput(attrs={"placeholder": "Please Enter your Email..."}),
+            "password": forms.PasswordInput(attrs={"placeholder": "Please Enter your Password..."}),
+        }
 
-class SigninForm(forms.Form):
 
-    email = forms.EmailField(
-        label="Email",
-        max_length=200,
-        required=False,
-        widget=forms.EmailInput(
-            attrs={"placeholder": "Enter your email"},
-        ),
-        help_text="You should enter your Email in this field",
-    )
+class SigninForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["email", "password"]
+        widgets = {
+            "email": forms.TextInput(attrs={"placeholder": "Please Enter your Email..."}),
+            "password": forms.PasswordInput(attrs={"placeholder": "Please Enter your Password..."}),
+        }
 
-    password = forms.CharField(
-        label="Password",
-        max_length=200,
-        required=False,
-        widget=forms.PasswordInput(
-            attrs={"placeholder": "Enter your password"}
-        ),
-        help_text="You should enter your password in this field",
-    )
+
+class UserValidationForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ["phone_number"]
+        widgets = {
+            "phone_number": forms.TextInput(attrs={"placeholder": "Please Enter your Phone Number ..."}),
+        }
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get("phone_number")
+
+        if not re.fullmatch(r"^\d{10,15}$", phone_number):
+            raise ValidationError("Phone number must be 10-15 digits long and contain only numbers.")
+
+        if not phone_number.startswith(("1", "2", "3", "4", "5", "6", "7", "8", "9")):
+            raise ValidationError("Invalid phone number format.")
+
+        return phone_number

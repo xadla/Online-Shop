@@ -12,10 +12,10 @@ from rest_framework import status
 
 from cart.models import Cart, CartItem
 from products.models import Product
-from .forms import SignupForm, SigninForm
-from .models import User
+from .forms import SignupForm, SigninForm, UserValidationForm
+from .models import User, OTP
 from .serializers import UserSerializer
-from utils import fetch
+from utils import fetch, send_meassage
 
 
 class SignupView(View):
@@ -146,6 +146,42 @@ class SigninView(View):
         return super().dispatch(request, *args, **kwargs)
 
 
+class ValidationView(LoginRequiredMixin, View):
+
+    login_url = "/accounts/signin/"
+    class_form = UserValidationForm
+    template_name = "accounts/validation.html"
+
+    def get(self, request):
+
+        form = self.class_form()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+
+        form = self.class_form(request.post)
+        if form.is_valid():
+            phone_number = form.cleaned_data["phone_number"]
+            user = User.objects.filter(phone_number=phone_number).first()
+
+            if user:
+                otp = OTP.objects.filter(user=user, used=False).first()
+
+                if otp and otp.is_valid():
+                    user.validate = True
+                    user.save()
+                    messages.success(request, "Your account is successfully validated!")
+                    otp.mark_used()
+
+                    return redirect("pages:home")
+                else:
+                    messages.error("Invalid or expired OTP!")
+                    return render(request, self.template_name, {"form": form})
+
+        messages.error(request, "This Phone Number does not exist")
+        return render(request, self.template_name, {"form": form})
+
+
 class LogoutView(LoginRequiredMixin, View):
 
     login_url = "/accounts/signin/"
@@ -164,3 +200,19 @@ class UserAPI(APIView):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class GenerateOTP(LoginRequiredMixin, APIView):
+
+    def get(self, request):
+        try:
+            user = User.objects.get(email=request.user.email)
+
+        except User.DoesNotExist:
+            return Response({"error": "You must login before validate"}, status=status.HTTP_400_BAD_REQUEST)
+
+        otp = OTP.create_otp(user)
+        # Send SMS to user Phone Number
+        send_meassage(otp.code, request.GET.get("phone_number"))
+
+        return Response({'otp': otp.code, 'expires_at': otp.expires_at}, status=status.HTTP_200_OK)

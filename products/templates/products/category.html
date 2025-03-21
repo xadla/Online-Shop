@@ -9,10 +9,10 @@
 
 {% if products_with_urls %}
 
+    <h3>All Products in this Category</h3>
+    <div id="container">
     {% for item in products_with_urls %}
 
-    <h3>All Products in {{ item.product.category }}</h3>
-    <div id="container">
         <a href="{% url 'products:product' item.product.id %}">
             <div class="product">
                 <img src="{{ item.url }}" alt="">
@@ -27,9 +27,9 @@
                 </p>
             </div>
         </a>
-    </div>
 
     {% endfor %}
+    </div>
 
 {% else %}
 

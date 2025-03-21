@@ -1,5 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.utils import timezone
+
+
+import random
+import string
+from datetime import timedelta
 
 
 class UserManager(BaseUserManager):
@@ -41,6 +47,7 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
     address = models.TextField()
+    validate = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -66,3 +73,29 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+
+class OTP(models.Model):
+    code = models.CharField(max_length=6, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    used = models.BooleanField(default=False)
+
+    def is_valid(self):
+        return not self.used and self.expires_at > timezone.now()
+
+    def mark_used(self):
+        self.used = True
+        self.save()
+
+    @staticmethod
+    def generate_code(length=6):
+        return ''.join(random.choices(string.digits, k=length))
+
+    @classmethod
+    def create_otp(cls, user, validity_minutes=5):
+        code = cls.generate_code()
+        expires_at = timezone.now() + timedelta(minutes=validity_minutes)
+        otp = cls.objects.create(user=user, code=code, expires_at=expires_at)
+        return otp

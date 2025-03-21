@@ -1,13 +1,11 @@
-#container{
-    display: inline-flex;
+#container {
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
     padding: 20px;
-}
-
-#container a{
-    width: 300px;
+    gap: 10px;
 }
 
 h3{
@@ -23,6 +21,7 @@ h3{
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: 10px;
     border-radius: 10px;
+    margin: 10px;
 }
   
 a:hover .product {
